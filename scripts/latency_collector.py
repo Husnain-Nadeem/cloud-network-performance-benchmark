@@ -1,5 +1,3 @@
-# latency_collector.py
-
 import subprocess
 import csv
 import re
@@ -16,23 +14,21 @@ result = subprocess.run(
 output = result.stdout
 
 loss_match = re.search(r'(\d+)% packet loss', output)
-loss = loss_match.group(1) if loss_match else "0"
+packet_loss = float(loss_match.group(1)) if loss_match else 0
 
 rtt_match = re.search(
-    r'=\s([\d\.]+)/([\d\.]+)/([\d\.]+)/',
+    r'=\s([\d\.]+)/([\d\.]+)/([\d\.]+)/([\d\.]+)',
     output
 )
 
-avg_latency = rtt_match.group(2) if rtt_match else "0"
+if rtt_match:
+    min_latency = float(rtt_match.group(1))
+    avg_latency = float(rtt_match.group(2))
+    max_latency = float(rtt_match.group(3))
+    jitter = float(rtt_match.group(4))
+else:
+    min_latency = avg_latency = max_latency = jitter = 0
 
-with open("latency.csv", "a", newline="") as file:
-    writer = csv.writer(file)
-
-    writer.writerow([
-        datetime.now(),
-        TARGET_IP,
-        avg_latency,
-        loss
-    ])
-
-print("Measurement saved")
+print(avg_latency)
+print(packet_loss)
+print(jitter)
