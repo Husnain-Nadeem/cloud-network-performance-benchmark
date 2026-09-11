@@ -7,7 +7,7 @@ Destination Region:
 - AWS us-west-2 (Oregon)
 
 Instance Type:
-- t3.micro (
+- t3.micro 
 
 Operating System:
 - Ubuntu 24.04
